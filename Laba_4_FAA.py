@@ -40,7 +40,7 @@ def get_posts(url, queue):
             except TypeError:
                 pass
 
-        time.sleep(10)  # every 10 sec update news
+        time.sleep(10)  
 
 
 if __name__ == "__main__":
@@ -52,11 +52,11 @@ if __name__ == "__main__":
 
     while True:
         if queue.empty():
-            # print("Новых новостей нет! Проверьте чуть позже" + "\n\n\t\t\t\t\t *******")
+            
             pass
         else:
             while not queue.empty():
                 print(queue.get())
                 print(datetime.datetime.now())
         time.sleep(0)
-        # time.sleep(10) # print one new every 10 secods from queue
+        
