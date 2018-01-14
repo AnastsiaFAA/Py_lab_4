@@ -1,15 +1,15 @@
 #Используя Python  и библиотеки Queue и Thread, а так же код из 3 задания, 
 #написать скрипт, который создает фоновый поток и в нем периодично обновляет страницу 
 #новостного агенства и отслеживает новые новости(которые ещё не выводились). 
-#Фоновый поток использует объект очередь для передачи в основной поток новый новостей. 
+#Фоновый поток использует объект очередь для передачи в основной поток новых новостей. 
 #Новости выводятся на печать из основного потока.
 import requests
 from bs4 import BeautifulSoup
-from queue import Queue, Empty
-from threading import Thread, Lock
+from queue import Queue, Empty      #класс Queue в этом модуле реализует все необходимые семантики блокировки
+from threading import Thread, Lock  #для работы с потоками
 from datetime import datetime
-import time
-import datetime
+import time                         #для работы со временем
+import datetime                     #классы для обработки времени
 
 
 def get_posts(url, queue):
@@ -19,7 +19,7 @@ def get_posts(url, queue):
         Soup = BeautifulSoup(PageHTML, "html.parser") #представить как вложенную структуру данных
         posts = []      #создается список "посты"
 
-        for i in Soup.find_all("div", "story__main"):
+        for i in Soup.find_all("div", "story__main"):  #код из 3 задания
                       #ищет в html-коде класс "story_main"             
             tagos = []
             title = []
@@ -33,34 +33,34 @@ def get_posts(url, queue):
                 author = authors.get_text()
             #в список "посты" для каждого класса "story_main" добавляется словарь с такими ключами:
             posts.append({'Title:': title, "Tags:": tagos, "Author:": author})
-            #обработка исключения
-            try:                        #предложение-инструкция
-                if title not in all_titles:
+            # исключение
+            try:                        #обработка ошибок
+                if title not in all_titles:   #задача 
                     all_titles.add(title)
-
+                                             #поместить элемент в очередь
                     queue.put({'Author:': author,
                                'Title:': title,
                                'Tags:': tagos})
-            except TypeError:   #операция применена к объекту несоответствующего типа
+            except TypeError:   #перехват ошибки #операция применена к объекту несоответствующего типа
                 pass       #остановка
 
         time.sleep(10)  #каждые 10сек обновляет новости
 
 
 if __name__ == "__main__":
-    queue = Queue()
+    queue = Queue()    #инициализация класса Queue(обяз)
     url = 'https://pikabu.ru/'
     thread = Thread(target=get_posts, args=(url, queue))
-    thread.start()
-    all_titles = set()
+    thread.start() #запуск объекта потока
+    all_titles = set()  #мн-во(без.повт)
 
     while True:
-        if queue.empty():
+        if queue.empty():    #если очередь пуста
             
             pass
         else:
             while not queue.empty():
-                print(queue.get())
-                print(datetime.datetime.now())
+                print(queue.get())     #удалить и вернуть элемент из очереди   
+                print(datetime.datetime.now()) #тек. дата и время
         time.sleep(0)  
         
