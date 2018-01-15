@@ -42,7 +42,7 @@ def get_posts(url, queue):
                                'Title:': title,
                                'Tags:': tagos})
             except TypeError:   #перехват ошибки #операция применена к объекту несоответствующего типа
-                pass       #остановка
+                pass       
 
         time.sleep(10)  #каждые 10сек обновляет новости
 
